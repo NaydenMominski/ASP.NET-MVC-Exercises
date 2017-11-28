@@ -1,6 +1,6 @@
 ﻿namespace ForumSystem.Data.Model
 {
-    class Post
+    public class Post
     {
     }
 }

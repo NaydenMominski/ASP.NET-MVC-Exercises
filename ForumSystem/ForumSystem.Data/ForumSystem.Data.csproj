@@ -56,6 +56,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MsSqlDbContex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\EfRepository.cs" />
+    <Compile Include="Repositories\IEfRepostory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
