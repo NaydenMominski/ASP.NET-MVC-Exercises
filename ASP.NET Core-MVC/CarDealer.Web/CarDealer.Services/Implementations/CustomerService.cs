@@ -4,6 +4,8 @@ namespace CarDealer.Services.Implementations
     using Data;
     using System.Collections.Generic;
     using Models;
+    using Models.Cars;
+    using Models.Customers;
     using System.Linq;
 
     public class CustomerService : ICustomerService
@@ -43,5 +45,23 @@ namespace CarDealer.Services.Implementations
                 })
                 .ToList();
         }
+
+        public CustomerTotalSalesModel TotalSaleById(int id)
+        => this.db
+            .Customers
+            .Where(c => c.Id == id)
+            .Select(c => new CustomerTotalSalesModel
+            {
+                Name = c.Name,
+
+                IsYoungDriver = c.IsYoungDriver,
+                BoughtCars = c.Sales.Select(s=>new CarPriceModel
+                {
+                    Price= s.Car.Parts.Sum(p=>p.Part.Price),
+                    Discount = s.Discount
+                })
+            })
+            .FirstOrDefault();
+        
     }
 }
