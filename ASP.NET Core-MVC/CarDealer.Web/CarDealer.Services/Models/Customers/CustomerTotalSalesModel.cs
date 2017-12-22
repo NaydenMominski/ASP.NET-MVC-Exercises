@@ -1,8 +1,7 @@
 ﻿
-
 namespace CarDealer.Services.Models.Customers
 {
-    using Cars;
+    using Sales;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -12,7 +11,7 @@ namespace CarDealer.Services.Models.Customers
 
         public bool IsYoungDriver { get; set; }
 
-        public IEnumerable<CarPriceModel> BoughtCars { get; set; }
+        public IEnumerable<SaleModel> BoughtCars { get; set; }
 
         public decimal TotalMoneySpend
         => this.BoughtCars

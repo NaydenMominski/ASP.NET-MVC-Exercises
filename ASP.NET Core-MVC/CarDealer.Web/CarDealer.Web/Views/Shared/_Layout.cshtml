@@ -30,7 +30,20 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>                   
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Customers
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/customers/all/ascending">All</a></li>
+                            <li><a href="/customers/create">Create</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/sales">Sales</a></li>
+                    <li><a href="/cars/parts">Cars</a></li>
+                    
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
