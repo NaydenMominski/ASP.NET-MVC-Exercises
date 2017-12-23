@@ -27,7 +27,7 @@ namespace CarDealer.Web.Controllers
         private SuppliersModel GetSuppliers(bool importers)
         {
             var type = importers ? "Importer" : "Local";
-            var suppliers = this.suppliers.All(importers);
+            var suppliers = this.suppliers.AllListing(importers);
 
             return new SuppliersModel
             {

@@ -5,7 +5,7 @@ namespace CarDealer.Services.Implementations
     using System.Collections.Generic;
     using Models.Cars;
     using System.Linq;
-    using Models;
+    using Models.Parts;
 
     public class CarService : ICarService
     {
@@ -33,6 +33,7 @@ namespace CarDealer.Services.Implementations
         public IEnumerable<CarWithPartsModel> WithParts()
             => this.db
             .Cars
+            .OrderByDescending(c => c.Id)
             .Select(c => new CarWithPartsModel
             {
                 Make = c.Make,
