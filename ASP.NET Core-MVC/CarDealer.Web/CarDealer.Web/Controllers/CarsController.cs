@@ -7,6 +7,7 @@ namespace CarDealer.Web.Controllers
     using System.Linq;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using System.Collections.Generic;
+    using Microsoft.AspNetCore.Authorization;
 
     [Route("cars")]
     public class CarsController: Controller
@@ -20,6 +21,7 @@ namespace CarDealer.Web.Controllers
             this.parts=parts;
         }
 
+        [Authorize]
         [Route(nameof(Create))]
         public IActionResult Create() 
             => View(new CarFormModel
@@ -27,6 +29,7 @@ namespace CarDealer.Web.Controllers
                 AllParts=this.GetPartSelectItems()
             });
 
+        [Authorize]
         [HttpPost]
         [Route(nameof(Create))]
         public IActionResult Create(CarFormModel carModel)

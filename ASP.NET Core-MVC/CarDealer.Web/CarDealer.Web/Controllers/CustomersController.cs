@@ -36,7 +36,7 @@
 
         }
 
-        [Route(nameof(Edit) + "/{id}")]
+        //[Route(nameof(Edit) + "/{id}")]
         public IActionResult Edit(int id)
         {
             var customer = this.customers.ById(id);
