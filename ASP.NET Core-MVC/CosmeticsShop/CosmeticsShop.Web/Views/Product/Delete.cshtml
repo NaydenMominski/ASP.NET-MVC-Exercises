@@ -1,0 +1,11 @@
+﻿
+@model Guid
+
+@{
+    ViewData["Title"] = "Delete Product";
+}
+
+<h2>Are you sure you want to delete this part?</h2>
+
+<a href="/product/all" class="btn btn-default">Back</a>
+<a href="/product/destroy/@Model" class="btn btn-danger">Confirm Delete</a>

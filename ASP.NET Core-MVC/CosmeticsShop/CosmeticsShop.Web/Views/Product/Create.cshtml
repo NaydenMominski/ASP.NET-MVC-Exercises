@@ -1,0 +1,86 @@
+﻿@model ProductFormViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SpecialPrice" class="control-label"></label>
+                <input asp-for="SpecialPrice" class="form-control" />
+                <span asp-validation-for="SpecialPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SpecialPriceStartDate" class="control-label"></label>
+                <input asp-for="SpecialPriceStartDate" class="form-control" />
+                <span asp-validation-for="SpecialPriceStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SpecialPriceEndDate" class="control-label"></label>
+                <input asp-for="SpecialPriceEndDate" class="form-control" />
+                <span asp-validation-for="SpecialPriceEndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StockQuantity" class="control-label"></label>
+                <input asp-for="StockQuantity" class="form-control" />
+                <span asp-validation-for="StockQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Published" /> @Html.DisplayNameFor(model => model.Published)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="AllCategory"></label>
+                <select asp-for="SelectedCategoryId" asp-items="Model.AllCategory" class="form-control category-select"></select>
+                <small>* Hold "Ctrl to select multiple category"</small>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="AllManifacturer"></label>
+                <select asp-for="SelectedManifacturerId" asp-items="Model.AllManifacturer" class="form-control category-select"></select>
+                <small>* Hold "Ctrl to select multiple category"</small>
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    <label for="pictures" class="control-label">Add pictures of your home</label>
+                    <input id="pictures" type="file" asp-for="Images" multiple />
+                    <span asp-validation-for="Images" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="All">Back to List</a>
+</div>
