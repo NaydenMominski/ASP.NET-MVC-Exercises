@@ -14,4 +14,8 @@
     <ProjectReference Include="..\CosmeticsShop.Data\CosmeticsShop.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Image\" />
+  </ItemGroup>
+
 </Project>

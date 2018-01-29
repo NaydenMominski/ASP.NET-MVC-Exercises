@@ -16,18 +16,18 @@
 
 <ul class="pagination">
     <li class="page-item @previousDisabled">
-        <a class="page-link @previousDisabled" href="/parts/all?page=@Model.PreviousPage" aria-label="Previous">
+        <a class="page-link @previousDisabled" href="/product/all?page=@Model.PreviousPage" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
             <span class="sr-only">Previous</span>
         </a>
     </li>
     @for (int i = 1; i <= Model.TotalPages; i++)
     {
-        <li class="page-item @(Model.CurrentPage==i?"active":string.Empty)"><a class="page-link" href="/parts/all?page=@i">@i</a></li>
+        <li class="page-item @(Model.CurrentPage==i?"active":string.Empty)"><a class="page-link" href="/product/all?page=@i">@i</a></li>
     }
 
     <li class="page-item @NextDisabled">
-        <a class="page-link @NextDisabled" href="/parts/all?page=@Model.NextPage" aria-label="Next">
+        <a class="page-link @NextDisabled" href="/product/all?page=@Model.NextPage" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
             <span class="sr-only">Next</span>
         </a>
@@ -57,7 +57,9 @@
         {
         <tr>
             <td>
-                <img src="@product.MaingImagePath" alt="Image" width="100px;" />
+                <a href="/product/details/@product.Id">                   
+                    <img src="@product.MaingImagePath" alt="Image" width="100px;" />
+                </a>
             </td>
             <td>
                 @product.Name

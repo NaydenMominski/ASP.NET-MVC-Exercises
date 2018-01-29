@@ -9,22 +9,24 @@
     using Models.Product;
     using System.IO;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Hosting;
 
     public class ProductController:Controller
     {
-        private const int PageSize = 25;
+        private const int PageSize = 10;
+        string uploadsFolderPath = "pictures";
 
-        private readonly IImageService imageService;
         private readonly IProductService product;
         private readonly ICategoryService category;
         private readonly IManifacturerService manifacturer;
+        private readonly IHostingEnvironment env;
 
-        public ProductController(IImageService imageService, IProductService product, ICategoryService category, IManifacturerService manifacturer)
+        public ProductController( IProductService product, ICategoryService category, IManifacturerService manifacturer, IHostingEnvironment env)
         {
-            this.imageService = imageService;
             this.product = product;
             this.category = category;
             this.manifacturer = manifacturer;
+            this.env = env;
         }
 
         [HttpGet]
@@ -58,25 +60,28 @@
             List<string> imagePaths = new List<string>();
 
             //save pictures
-            var productPicturesPath = this.GetAdequateProductPicturesPath();
+            //var productPicturesPath = this.GetAdequateProductPicturesPath();
 
-            foreach (var picture in productModel.Images)
+            foreach (var imageFile in productModel.Images)
             {
-                if (picture.Length > 0)
+                if (imageFile.Length > 0)
                 {
-                    var imageFullPath = Path.Combine(productPicturesPath, picture.FileName);
+                    
+                    if (!Directory.Exists(uploadsFolderPath))
+                    {
+                        Directory.CreateDirectory(uploadsFolderPath);
+                    }
+
+                    var imageFullPath = Path.Combine(this.env.WebRootPath, uploadsFolderPath, Path.GetFileName(imageFile.FileName));
 
                     using (var stream = new FileStream(imageFullPath, FileMode.Create))
                     {
                         Task.Run(async () =>
                         {
-                            await picture.CopyToAsync(stream);
+                            await imageFile.CopyToAsync(stream);
                         }).Wait();
 
-                        var pathTokens = imageFullPath
-                            .Split(new[] { "\\" }, StringSplitOptions.None);
-
-                        var relativePicturePath = string.Join("/", pathTokens.Skip(pathTokens.Length - 2));
+                        var relativePicturePath = "/" + uploadsFolderPath + "/" + Path.GetFileName(imageFile.FileName);
 
                         imagePaths.Add(relativePicturePath);
                     }
@@ -103,17 +108,13 @@
         
         public IActionResult All(int page = 1)
         {
-            var Products1 = this.product.AllListings(page, PageSize);
+            var Products = this.product.AllListings(page, PageSize);
 
-            foreach (var p in Products1)
-            {
-                p.MaingImagePath= this.imageService.PreparePictureToDisplay(p.MaingImagePath);
-            }
 
             var t = this.product.Total();
             return View(new ProductPageListingModel
             {
-                Products = Products1,
+                Products = Products,
                 CurrentPage = page,
                 TotalPages = (int)Math.Ceiling(this.product.Total() / (double)PageSize)
 
@@ -161,6 +162,25 @@
             });
 
         }
+        public IActionResult Details(Guid id)
+        {
+            var product = this.product.Details(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+ 
+            var details= new ProductDetailsViewModel
+            {
+                Name = product.Name,
+                Id = product.Id,
+                Images = product.Images
+            };
+
+            return View(details);
+        }
+
 
         [HttpPost]
         public IActionResult Edit(Guid id, ProductFormViewModel productModel)
@@ -186,25 +206,28 @@
                 DeleteExistingFile(id);
 
                 //save pictures
-                var productPicturesPath = this.GetAdequateProductPicturesPath();
 
-                foreach (var picture in productModel.Images)
+                foreach (var imageFile in productModel.Images)
                 {
-                    if (picture.Length > 0)
+                    if (imageFile.Length > 0)
                     {
-                        var imageFullPath = Path.Combine(productPicturesPath, picture.FileName);
+                        
+                        if (!Directory.Exists(uploadsFolderPath))
+                        {
+                            Directory.CreateDirectory(uploadsFolderPath);
+                        }
+
+                        var imageFullPath = Path.Combine(this.env.WebRootPath, uploadsFolderPath, Path.GetFileName(imageFile.FileName));
+
 
                         using (var stream = new FileStream(imageFullPath, FileMode.Create))
                         {
                             Task.Run(async () =>
                             {
-                                await picture.CopyToAsync(stream);
+                                await imageFile.CopyToAsync(stream);
                             }).Wait();
 
-                            var pathTokens = imageFullPath
-                                .Split(new[] { "\\" }, StringSplitOptions.None);
-
-                            var relativePicturePath = string.Join("/", pathTokens.Skip(pathTokens.Length - 2));
+                            var relativePicturePath = "/" + uploadsFolderPath + "/" + Path.GetFileName(imageFile.FileName);
 
                             imagePaths.Add(relativePicturePath);
                         }
@@ -231,26 +254,17 @@
 
         private void DeleteExistingFile(Guid id)
         {
-            var fullPath = this.imageService.GetProductPicturesFullPath(id);
+            var p = product.ById(id);
 
-            //delete existing picture
-            DirectoryInfo di = new DirectoryInfo(fullPath);
-
-            foreach (FileInfo file in di.GetFiles())
+            foreach (var image in product.ById(id).Images)
             {
-                file.Delete();
+                var fullPath = this.env.WebRootPath + image.ImageUrl;
+                if (System.IO.File.Exists(fullPath))
+                {
+                     System.IO.File.Delete(fullPath);                   
+                }
             }
-        }
-
-        private string GetAdequateProductPicturesPath()
-        {
-            var currentProductDirectory = Guid.NewGuid();
-
-            string path = this.imageService.GetFilePath($"Images/ProductPictures/{currentProductDirectory}");
-
-            Directory.CreateDirectory(path);
-
-            return path;
+                              
         }
 
         private IEnumerable<SelectListItem> GetCategorySelectItems()

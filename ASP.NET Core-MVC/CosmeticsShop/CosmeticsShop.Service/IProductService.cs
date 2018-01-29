@@ -51,6 +51,8 @@ namespace CosmeticsShop.Service
 
         bool Exists(Guid id);
 
+        ProductWithImagesServiceModel Details(Guid id);
+
     }
 }
 

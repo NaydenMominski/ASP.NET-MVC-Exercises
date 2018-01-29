@@ -1,0 +1,34 @@
+﻿@model ProductDetailsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+@section head
+    {
+    <link simpl-append-version="true" rel="stylesheet" href="~/css/smoothproducts.css" />
+    <link simpl-append-version="true" rel="stylesheet" href="~/css/product-detail.css" />
+}
+    <h1>@ViewData["Title"] </h1>
+<div class="product-detail">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="sp-wrap">
+                @foreach (var image in Model.Images)
+                {
+                    <a href="@image.ImageUrl">
+                        <img src="@image.ImageUrl" alt="" />
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script simpl-append-version="true" src="~/js/smoothproducts.min.js"></script>
+    <script simpl-append-version="true" src="~/js/product-detail.js"></script>
+}
+
+

@@ -81,6 +81,7 @@
             this.db.Add(product);
             this.db.SaveChanges();
         }
+
         public ProductServiceModel ById(Guid id)
             => this.db
             .Products
@@ -103,6 +104,7 @@
         }
 
         public int Total() => this.db.Products.Count();
+
 
         public void Edit(
             Guid id,
@@ -156,9 +158,37 @@
             this.db.SaveChanges();
             
         }
+
+
         public bool Exists(Guid id)
             => this.db.Products.Any(c => c.Id == id);
 
+        public ProductWithImagesServiceModel Details(Guid id)
+        {
+            var productDetails = this.db
+              .Products
+              .Where(b => b.Id == id)
+              .ProjectTo<ProductWithImagesServiceModel>()
+              .FirstOrDefault();
+
+            return productDetails;
+        }
+
+
+        //=> this.db
+        //    .Products
+        //    .Where(s => s.Id == id)
+        //    .Select(s => new ProductWithImagesServiceModel
+        //    {
+        //        Id = s.Id,
+        //        Name=s.Name,
+        //        Images = new Image
+        //        {
+        //            ImageUrl=s.Images.
+        //        }
+
+        //    })
+        //    .FirstOrDefault();
 
         //public ProductDetailsServiceModel Details(int id)
         //     => this.db
@@ -166,6 +196,6 @@
         //        .Where(b => b.Id == id)
         //        .ProjectTo<BookDetailsServiceModel>()
         //        .FirstOrDefault();
- 
+
     }
 }
