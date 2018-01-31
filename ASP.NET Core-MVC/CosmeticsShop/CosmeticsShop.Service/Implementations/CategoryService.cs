@@ -27,6 +27,13 @@ namespace CosmeticsShop.Service.Implementations
             .ToList();
 
 
+        public  TModel ById<TModel>(Guid id) where TModel : class
+            => this.db
+                .Categories
+                .Where(c => c.Id == id)
+                .ProjectTo<TModel>()
+                .FirstOrDefault();
+
         public void Create(string name, string description, bool published)
         {
             var category = new Category

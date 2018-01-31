@@ -10,6 +10,7 @@
     using System.IO;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Hosting;
+    using Service.Models.Product;
 
     public class ProductController:Controller
     {
@@ -60,8 +61,6 @@
             List<string> imagePaths = new List<string>();
 
             //save pictures
-            //var productPicturesPath = this.GetAdequateProductPicturesPath();
-
             foreach (var imageFile in productModel.Images)
             {
                 if (imageFile.Length > 0)
@@ -108,17 +107,21 @@
         
         public IActionResult All(int page = 1)
         {
-            var Products = this.product.AllListings(page, PageSize);
 
-
-            var t = this.product.Total();
-            return View(new ProductPageListingModel
+            var model = new ProductPageListingModel
             {
-                Products = Products,
+                Products = this.product.AllListings(page, PageSize),
                 CurrentPage = page,
                 TotalPages = (int)Math.Ceiling(this.product.Total() / (double)PageSize)
+            };
 
-            });
+            if (model.Products == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+            
         }
 
         public IActionResult Delete(Guid id) 
@@ -164,21 +167,17 @@
         }
         public IActionResult Details(Guid id)
         {
-            var product = this.product.Details(id);
+            var model = new ProductDetailsViewModel
+            {
+                Product = this.product.ById<ProductServiceModel>(id)
+            };
 
-            if (product == null)
+            if (model.Product == null)
             {
                 return NotFound();
             }
- 
-            var details= new ProductDetailsViewModel
-            {
-                Name = product.Name,
-                Id = product.Id,
-                Images = product.Images
-            };
 
-            return View(details);
+            return View(model);
         }
 
 

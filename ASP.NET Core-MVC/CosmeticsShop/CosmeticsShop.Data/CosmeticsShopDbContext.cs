@@ -15,6 +15,8 @@
         public DbSet<Image> Images { get; set; }
         public DbSet<Manifacturer> Manufacturers { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -31,10 +33,22 @@
             .HasForeignKey(p => p.ManifacturerId);
 
             builder
-            .Entity<Image>()
-            .HasOne(i => i.Product)
-            .WithMany(p => p.Images)
-            .HasForeignKey(i => i.ProductId);
+            .Entity<Product>()
+            .HasMany(p => p.Images)
+            .WithOne(i => i.Product)
+            .HasForeignKey(p => p.ProductId);
+
+            builder
+            .Entity<Order>()
+            .HasOne(o => o.User)
+            .WithMany(u => u.Orders)
+            .HasForeignKey(o => o.UserId);
+
+            builder
+            .Entity<Order>()
+            .HasMany(o => o.Items)
+            .WithOne(i => i.Order)
+            .HasForeignKey(o => o.OrderId);
 
 
             base.OnModelCreating(builder);

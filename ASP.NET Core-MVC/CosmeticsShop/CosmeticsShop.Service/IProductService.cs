@@ -43,6 +43,8 @@ namespace CosmeticsShop.Service
 
         ProductServiceModel ById(Guid id);
 
+        TModel ById<TModel>(Guid id) where TModel : class;
+
         void Delete(Guid id);
 
         IEnumerable<ProductsListingModel> AllListings(int page = 1, int pageSize = 10);

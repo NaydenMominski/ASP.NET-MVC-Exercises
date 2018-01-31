@@ -1,8 +1,10 @@
 ﻿namespace CosmeticsShop.Service.Models.Category
 {
+    using CosmeticsShop.Common.Mapping;
     using System;
+    using Data.Models;
 
-    public class CategoryServiceModel
+    public class CategoryServiceModel : IMapFrom<Category>
     {
         public Guid Id { get; set; }
 

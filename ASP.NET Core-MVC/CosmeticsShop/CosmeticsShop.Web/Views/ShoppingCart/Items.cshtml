@@ -1,0 +1,19 @@
+﻿@model IEnumerable<CartItemViewModel>
+
+@{
+    ViewData["Title"] = "Items";
+}
+
+<h2>Items</h2>
+
+@foreach (var item in Model)
+{
+<div>
+    @item.Title - $@item.Price - Quantity:@item.Quantity
+</div>
+}
+<hr />
+Total Price: $@Model.Sum(p=>p.Price*p.Quantity)
+<hr />
+
+<a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="FinishOrder">Finish Order</a>

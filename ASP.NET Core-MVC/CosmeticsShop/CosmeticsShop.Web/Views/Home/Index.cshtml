@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ProductPageListingModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -64,43 +66,38 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
+<br />
+<br />
+<div class="container">
+    <div class="row">
+        @foreach (var product in Model.Products)
+    {
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+            <div class="card">
+                <span class="badge badge-pill badge-danger sale-badge">Sale</span> <!-- discount badge -->
+                <center>
+                    <a href="/Product/details/@product.Id">
+                        <img class="card-img-top img-fluid" src="@product.MaingImagePath" width="170px;" height="170px;" alt="@product.Name" />
+                    </a>
+                </center>
+                <div class="card-block">
+                    <a href="/Product/details/@product.Id" class="card-title text-muted" title="@product.Name">@product.Name</a>
+                    <div class="card-text">
 
-<div class="row">
-    <div class="col-md-3">
-        <h2>Application uses</h2>
-        <ul>
-            <li>Sample pages using ASP.NET Core MVC</li>
-            <li>Theming using <a href="https://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
-        </ul>
+                        @product.Price.ToString("C2")
+
+                    </div>
+                    <div class="card-footer">
+                        <a class="btn btn-primary btn-sm" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@product.Id">Add to cart</a>
+                        @*<form asp-area="" asp-controller="ShoppingCart" asp-action="AddToCart" method="post">
+                            <input type="hidden" value="@product.Id" name="id" />
+                            <button type="submit" id="addToCart" class="btn btn-primary btn-sm">Add to cart</button>
+                        </form>*@
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+}
     </div>
-    <div class="col-md-3">
-        <h2>How to</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398600">Add a Controller and View</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699315">Manage User Secrets using Secret Manager.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699316">Use logging to log a message.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699317">Add packages using NuGet.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699319">Target development, staging or production environment.</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Overview</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=518008">Conceptual overview of what is ASP.NET Core</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699320">Fundamentals of ASP.NET Core such as Startup and middleware.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398602">Working with Data</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398603">Security</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699321">Client side development</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699322">Develop on different platforms</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699323">Read more on the documentation site</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Run &amp; Deploy</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517851">Run your app</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517853">Run tools such as EF migrations and more</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
-        </ul>
-    </div>
-</div>
+ </div>

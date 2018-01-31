@@ -11,6 +11,8 @@ namespace CosmeticsShop.Web
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Infrastructure.Extensions;
+    using Service.Implementations;
+    using Service;
 
     public class Startup
     {
@@ -42,9 +44,12 @@ namespace CosmeticsShop.Web
             // Add application services.
 
             services.AddAutoMapper();
-
+            
             services.AddDomainServices();
 
+            services.AddSingleton<IShoppingCartManager,ShoppingCartManager>();
+
+            services.AddSession();
             services.AddMvc();
         }
 
@@ -67,6 +72,8 @@ namespace CosmeticsShop.Web
             app.UseStaticFiles();
 
             app.UseAuthentication();
+
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

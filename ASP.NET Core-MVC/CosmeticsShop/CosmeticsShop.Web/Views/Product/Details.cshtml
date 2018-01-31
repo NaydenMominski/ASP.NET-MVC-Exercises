@@ -13,16 +13,50 @@
     <div class="row">
         <div class="col-md-6">
             <div class="sp-wrap">
-                @foreach (var image in Model.Images)
-                {
-                    <a href="@image.ImageUrl">
-                        <img src="@image.ImageUrl" alt="" />
-                    </a>
-                }
+                @foreach (var image in Model.Product.Images)
+            {
+                <a href="@image.ImageUrl">
+                    <img src="@image.ImageUrl" alt="" />
+                </a>
+        }
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="product-name">
+                <h1 class="">@Model.Product.Name</h1>
+            </div>
+            <div class="product-short-desc">
+                <p>@Model.Product.Description</p>
+        </div>
+            <div class="product-price">
+                @if (Model.Product.SpecialPrice != null)
+    {
+            <h3>$@Model.Product.SpecialPrice</h3>
+            <p class="product-price-regular">$@Model.Product.Price</p>
+            <p class="product-price-saving">You save (@Model.PercentOfSaving%)</p>
+}
+else
+{
+            <h3>$@Model.Product.Price</h3>
+
+}
+                @*<p class="product-price-saving">You save (16%)</p>*@
+            </div>
+            <div class="add-to-cart">
+                
+
+                <form method="post" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@Model.Product.Id" class="inline">
+                    <div class="product-quantity">
+                        <button type="button" class="quantity-button" name="subtract" value="-">-</button>
+                        <input type="text" class="quantity-field" readonly="readonly" name="qty" value="1">
+                        <button type="button" class="quantity-button" name="add" value="+">+</button>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-add-cart">Add to cart</button>
+                </form>
+            </div>
+        </div>
+        </div>
     </div>
-</div>
 
 @section scripts
     {

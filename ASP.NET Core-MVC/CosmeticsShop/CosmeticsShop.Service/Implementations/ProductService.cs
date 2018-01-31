@@ -28,15 +28,7 @@
               .OrderByDescending(p => p.DateAdded)
               .Skip((page - 1) * pageSize)
               .Take(pageSize)
-              .Select(p => new ProductsListingModel
-              {
-                Id =p.Id,
-                Name =p.Name,
-                Price=p.Price,
-                SpecialPrice=p.SpecialPrice,
-                MaingImagePath = p.Images.Select(i => i.ImageUrl).FirstOrDefault()
-              })
-              //.ProjectTo<ProductsListingModel>()
+              .ProjectTo<ProductsListingModel>()
               .ToList();
 
             return all;
@@ -89,6 +81,15 @@
             .ProjectTo<ProductServiceModel>()
             .FirstOrDefault();
 
+
+        public TModel ById<TModel>(Guid id) where TModel : class
+            => this.db
+                .Products
+                .Where(c => c.Id == id)
+                .ProjectTo<TModel>()
+                .FirstOrDefault();
+
+
         public void Delete(Guid id)
         {
             var product = this.db.Products.Find(id);
@@ -120,10 +121,7 @@
             Guid ManifacturerId,
             IEnumerable<string> imagesPaths)
         {
-            //var product = this.db.Products.Find(id);
-            var product = db.Products
-                            .Include(i => i.Images)
-                            .FirstOrDefault(i => i.Id == id);
+            var product = this.db.Products.Find(id);
 
             if (product == null)
             {
@@ -144,13 +142,10 @@
 
             if (imagesPaths.Count()!=0)
             {
-                //product.Images.Clear();
-                //db.SaveChanges();
-
                 product.Images = imagesPaths
-                    .Select(p => new Image
+                    .Select(i => new Image
                     {
-                        ImageUrl = p,
+                        ImageUrl = i,
                     })
                     .ToList();
             };
@@ -162,6 +157,7 @@
 
         public bool Exists(Guid id)
             => this.db.Products.Any(c => c.Id == id);
+
 
         public ProductWithImagesServiceModel Details(Guid id)
         {

@@ -1,16 +1,12 @@
-﻿
-
-
-namespace CosmeticsShop.Web.Models.Product
+﻿namespace CosmeticsShop.Web.Models.Product
 {
-    using CosmeticsShop.Data.Models;
+    using Service.Models.Product;
     using System;
-    using System.Collections.Generic;
 
     public class ProductDetailsViewModel
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public IEnumerable<Image> Images { get; set; }
+        public ProductServiceModel Product { get; set; }
+        public decimal PercentOfSaving =>this.Product.SpecialPrice.HasValue? (100 - Math.Ceiling((this.Product.SpecialPrice.GetValueOrDefault(1M) / this.Product.Price) * 100)):0;
+
     }
 }

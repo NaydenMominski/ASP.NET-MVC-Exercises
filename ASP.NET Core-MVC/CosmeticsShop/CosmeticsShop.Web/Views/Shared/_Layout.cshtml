@@ -8,6 +8,7 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/home.css" />
         @RenderSection("head", required: false)
     </environment>
     <environment exclude="Development">
@@ -36,7 +37,7 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     <li><a asp-area="" asp-controller="Manifacturer" asp-action="Create">Create</a></li>
                     <li><a asp-area="" asp-controller="Product" asp-action="All">Products</a></li>
-
+                    <li><a asp-area="" asp-controller="ShoppingCart" asp-action="Items">ShoppingCart</a></li>
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>

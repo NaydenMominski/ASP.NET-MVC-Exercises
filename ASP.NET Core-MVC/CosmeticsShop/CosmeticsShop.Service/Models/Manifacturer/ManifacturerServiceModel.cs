@@ -1,8 +1,10 @@
 ﻿namespace CosmeticsShop.Service.Models.Manifacturer
 {
+    using CosmeticsShop.Common.Mapping;
     using System;
+    using Data.Models;
 
-   public class ManifacturerServiceModel
+   public class ManifacturerServiceModel:IMapFrom<Manifacturer>
     {
         public Guid Id { get; set; }
 
