@@ -2,23 +2,17 @@
 
 namespace CosmeticsShop.Service.Implementations
 {
-    using AutoMapper.QueryableExtensions;
-    using CosmeticsShop.Data;
     using Models.ShoppingCart;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class ShoppingCartManager : IShoppingCartManager
     {
         private readonly ConcurrentDictionary<string, ShoppingCartServiceModel> cards;
 
-        //private readonly CosmeticsShopDbContext db;
-
         public ShoppingCartManager()
         {
-            //this.db = db;
             this.cards = new ConcurrentDictionary<string, ShoppingCartServiceModel>();
         }
 
@@ -30,6 +24,13 @@ namespace CosmeticsShop.Service.Implementations
             shoppingCart.AddToCart(productId, quantity);
         }
         
+        public void UpdateCartItem(string id, Guid productId, int quantity)
+        {
+            var shoppingCart = this.GetShoppingCart(id);
+
+            shoppingCart.UpdateCartItem(productId, quantity);
+        }
+
         public void RemoveFromCart(string id, Guid productId)
         {
             var shoppingCart = this.GetShoppingCart(id);

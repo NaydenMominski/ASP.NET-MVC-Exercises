@@ -13,6 +13,8 @@ namespace CosmeticsShop.Service
 
         void RemoveFromCart(string id, Guid productId );
 
+        void UpdateCartItem(string id, Guid productId, int quantity);
+
         IEnumerable<CartItem> GetItems(string id);
 
         //IEnumerable<ShoppingCartItem> itemsWithDetails(IEnumerable<Guid> itemIds);

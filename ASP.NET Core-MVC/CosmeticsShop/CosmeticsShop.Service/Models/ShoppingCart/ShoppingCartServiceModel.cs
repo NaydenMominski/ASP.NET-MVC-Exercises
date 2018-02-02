@@ -35,6 +35,13 @@
             
         }
 
+        public void UpdateCartItem(Guid productId, int quantity)
+        {
+            var cartItem = this.items.FirstOrDefault(i => i.ProductId == productId);
+            
+                cartItem.Quantity =quantity;           
+        }
+
         public void RemoveFromCart(Guid productId)
         {
             var cartItem = this.items

@@ -4,7 +4,6 @@
     using Common.Mapping;
     using Data.Models;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
     public class ProductsListingModel :IMapFrom<Product>, IHaveCustomMapping
@@ -16,6 +15,12 @@
         public decimal Price { get; set; }
 
         public decimal? SpecialPrice { get; set; }
+
+        public DateTime? SpecialPriceStartDate { get; set; }
+
+        public DateTime? SpecialPriceEndDate { get; set; }
+
+        public bool IsOnSalle => (this.SpecialPriceStartDate <= DateTime.UtcNow && this.SpecialPriceEndDate >= DateTime.UtcNow);
 
         public string MaingImagePath { get; set; }
 

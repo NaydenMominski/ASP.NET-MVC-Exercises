@@ -15,7 +15,7 @@
     public class ProductController:Controller
     {
         private const int PageSize = 10;
-        string uploadsFolderPath = "pictures";
+        private const string uploadsFolderPath = "pictures";
 
         private readonly IProductService product;
         private readonly ICategoryService category;
@@ -165,6 +165,7 @@
             });
 
         }
+
         public IActionResult Details(Guid id)
         {
             var model = new ProductDetailsViewModel
@@ -179,7 +180,6 @@
 
             return View(model);
         }
-
 
         [HttpPost]
         public IActionResult Edit(Guid id, ProductFormViewModel productModel)

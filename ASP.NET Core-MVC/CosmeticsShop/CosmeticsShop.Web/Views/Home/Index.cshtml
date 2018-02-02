@@ -71,33 +71,42 @@
 <div class="container">
     <div class="row">
         @foreach (var product in Model.Products)
-    {
-        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-            <div class="card">
-                <span class="badge badge-pill badge-danger sale-badge">Sale</span> <!-- discount badge -->
-                <center>
-                    <a href="/Product/details/@product.Id">
-                        <img class="card-img-top img-fluid" src="@product.MaingImagePath" width="170px;" height="170px;" alt="@product.Name" />
-                    </a>
-                </center>
-                <div class="card-block">
-                    <a href="/Product/details/@product.Id" class="card-title text-muted" title="@product.Name">@product.Name</a>
-                    <div class="card-text">
+        {
+            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                <div class="card">
+                    @if (product.IsOnSalle)
+                    {
+                        <span class="badge badge-pill badge-danger sale-badge">Sale</span> <!-- discount badge -->
 
-                        @product.Price.ToString("C2")
+                    }
+                    <center>
+                        <a href="/Product/details/@product.Id">
+                            <img class="card-img-top img-fluid" src="@product.MaingImagePath" width="170px;" height="170px;" alt="@product.Name" />
+                        </a>
+                    </center>
+
+                    <div class="card-block">
+                        <a href="/Product/details/@product.Id" class="card-title text-muted" title="@product.Name">@product.Name</a>
+                        <div class="card-text">
+                            @if (product.IsOnSalle)
+                            {
+                            <strike class="text-muted">@product.Price.ToString("C2")</strike>
+                            @product.SpecialPrice?.ToString("C2") 
+
+                            }
+                            else
+                            {
+                            @product.Price.ToString("C2")
+                            }
+
+                        </div>
+                        <div class="card-footer">
+                            <a class="btn btn-primary btn-sm" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@product.Id">Add to cart</a>
+                        </div>
 
                     </div>
-                    <div class="card-footer">
-                        <a class="btn btn-primary btn-sm" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@product.Id">Add to cart</a>
-                        @*<form asp-area="" asp-controller="ShoppingCart" asp-action="AddToCart" method="post">
-                            <input type="hidden" value="@product.Id" name="id" />
-                            <button type="submit" id="addToCart" class="btn btn-primary btn-sm">Add to cart</button>
-                        </form>*@
-                    </div>
-                    
                 </div>
             </div>
-        </div>
-}
+        }
     </div>
- </div>
+</div>

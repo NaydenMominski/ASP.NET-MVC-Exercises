@@ -7,10 +7,8 @@
     using CosmeticsShop.Data.Models;
     using CosmeticsShop.Service;
     using CosmeticsShop.Service.Models.ShoppingCart;
-    using CosmeticsShop.Web.Models.ShoppingCart;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -50,6 +48,25 @@
             return RedirectToAction(nameof(Items));
            
         }
+        public IActionResult RemoveFromCart(Guid id)
+        {
+            var shoppingCartId = this.HttpContext.Session.GetShoppinCartId();
+
+            this.shoppingCartManager.RemoveFromCart(shoppingCartId, id);
+
+            return RedirectToAction(nameof(Items));
+
+        }
+
+        public IActionResult UpdateCartItem(Guid id,int qty)
+        {
+            var shoppingCartId = this.HttpContext.Session.GetShoppinCartId();
+
+            this.shoppingCartManager.UpdateCartItem(shoppingCartId, id, qty);
+
+            return RedirectToAction(nameof(Items));
+        }
+
         [Authorize]
         public  IActionResult FinishOrder()
         {
@@ -62,23 +79,23 @@
                 return NotFound();
             }
 
-            var itemIds = items.Select(i => i.ProductId);
+            var itemIds = items.Select(i => i.ProductId).ToList();
 
             var itemsWithDetails = this.GetCartItems(items);
 
             var order = new Order
             {
                 UserId = this.userManager.GetUserId(User),
-                TotalPrice = itemsWithDetails.Sum(i => i.Price * i.Quantity)
+                TotalPrice = itemsWithDetails.Sum(i => i.CurentPrice)
             };
 
             foreach (var item in itemsWithDetails)
             {
                 order.Items.Add(new OrderItem
                 {
-                    ProductId=item.ProductId,
-                    ProductPrice=item.Price,
-                    ProductName=item.Title,
+                    ProductId=item.Id,
+                    ProductPrice= item.CurentPrice,
+                    ProductName =item.Name,
                     Quantity=item.Quantity
                 });
             }
@@ -91,25 +108,29 @@
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        private List<CartItemViewModel> GetCartItems(IEnumerable<CartItem> items)
+        [Authorize]
+        public IActionResult BillingAddress()
+        {
+            var shoppingCartId = this.HttpContext.Session.GetShoppinCartId();
+            var items = this.shoppingCartManager.GetItems(shoppingCartId);
+
+            var itemIds = items.Select(i => i.ProductId);
+
+            var itemsWithDetails = this.GetCartItems(items);
+
+            return View(itemsWithDetails);
+        }
+
+        private List<ShoppingCartItem> GetCartItems(IEnumerable<CartItem> items)
         {
             var itemsIds = items.Select(i => i.ProductId);
 
-            var itemsWithDetails = this.db
-              .Products
-              .Where(pr => itemsIds.Contains(pr.Id))
-              .Select(pr => new CartItemViewModel
-              {
-                  ProductId = pr.Id,
-                  Price = pr.Price,
-                  Title = pr.Name
-              })
-              .ToList();
-
+            var itemsWithDetails = product.GetListProductWithDetails<ShoppingCartItem>(itemsIds);
+            
             var itemQuantities = items.ToDictionary(i => i.ProductId, i => i.Quantity);
 
-            itemsWithDetails.ForEach(i => i.Quantity = itemQuantities[i.ProductId]);
-
+            itemsWithDetails.ForEach(i => i.Quantity = itemQuantities[i.Id]);
+            itemsWithDetails.ForEach(i =>i.CurentPrice=(i.IsOnSalle)?i.SpecialPrice:i.Price);
             return itemsWithDetails;
         }
     }

@@ -1,19 +1,110 @@
-﻿@model IEnumerable<CartItemViewModel>
+﻿@model IEnumerable<ShoppingCartItem>
 
 @{
     ViewData["Title"] = "Items";
 }
-
+@section head
+    {
+    <link simpl-append-version="true" rel="stylesheet" href="~/css/product-detail.css" />
+}
 <h2>Items</h2>
 
-@foreach (var item in Model)
-{
-<div>
-    @item.Title - $@item.Price - Quantity:@item.Quantity
-</div>
-}
-<hr />
-Total Price: $@Model.Sum(p=>p.Price*p.Quantity)
-<hr />
+@*@foreach (var item in Model)
+    {
+        <div>
+            @item.Name - $@item.CurentPrice - Quantity:@item.Quantity
+        </div>
+    }
+    <hr />
+    Total Price: $@Model.Sum(p => p.CurentPrice * p.Quantity)
+    <hr />
 
-<a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="FinishOrder">Finish Order</a>
+    <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="FinishOrder">Finish Order</a>*@
+
+
+<div class="container body-content">
+
+    <div class="row cart-list ng-scope">
+        <div class="col-md-8">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="2">Product</th>
+                        <th class="text-right">Price</th>
+                        <th class="text-center">Quantity</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <!-- ngRepeat: cartItem in vm.cart.items --><!-- ngIf: vm.cart.items.length -->
+                        <tr class="ng-scope">
+                            <td class="product-image">
+                                <img src="@item.MainImageUrlPath" width="120px;" alt="Alternate Text" />
+                            </td>
+                            <td>
+                                <h4 class="ng-binding">@item.Name</h4>
+                                <ul class="list-unstyled"></ul>
+                            </td>
+                            <td class="text-right ng-binding">$@item.CurentPrice</td>
+                            <td class="text-center">
+                                <form method="post" asp-controller="ShoppingCart" asp-action="UpdateCartItem" asp-route-id="@item.Id" class="inline">
+                                    <div class="product-quantity">
+                                        <button type="button" class="quantity-button" name="subtract" value="-">-</button>
+                                        <input type="text" class="quantity-field" readonly="readonly" name="qty" value="@item.Quantity" style="width:34px;">
+                                        <button type="button" class="quantity-button" name="add" value="+">+</button>
+                                    </div>
+                                    <button type="submit" class="btn btn-add-cart">Update Item</button>
+                                </form>
+                            </td>
+                            <td class="text-right">
+                                <a class="btn btn-danger" asp-controller="ShoppingCart" asp-action="RemoveFromCart" asp-route-id="@item.Id">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <div class="order-summary ng-scope">
+                <h4 class="text-center">Order summary</h4>
+                <dl class="dl-horizontal">
+                    <dt>Subtotal</dt>
+                    <dd class="ng-binding">$@Model.Sum(p => p.CurentPrice * p.Quantity)</dd>
+                    <dt class="ng-binding">Discount </dt>
+                    <dd class="ng-binding">$0.00</dd>
+                    <dt>Order Total</dt>
+                    <dd><strong class="ng-binding">$@Model.Sum(p => p.CurentPrice * p.Quantity)</strong></dd>
+                </dl>
+                <p class="text-center"><a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="BillingAddress">Finish Order</a></p>
+            </div>
+
+        </div><!-- end ngIf: vm.cart.items.length -->
+    </div>
+</div>
+
+
+@section scripts
+    {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        (function ($) {
+            $(window).load(function () {
+                $('.quantity-button').on('click', function () {
+                    var quantityInput = $(this).closest("form").find('.quantity-field');
+                    if ($(this).val() === '+') {
+                        quantityInput.val(parseInt(quantityInput.val(), 10) + 1);
+                    }
+                    else if (quantityInput.val() > 1) {
+                        quantityInput.val(quantityInput.val() - 1);
+                    }
+                });
+
+
+            });
+        })(jQuery);
+    </script>
+}

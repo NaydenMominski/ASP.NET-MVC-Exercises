@@ -1,15 +1,14 @@
 ﻿namespace CosmeticsShop.Services.Implementations
 {
+    using AutoMapper.QueryableExtensions;
+    using Data;
+    using Data.Models;
+    using Microsoft.EntityFrameworkCore.Extensions.Internal;
+    using Service;
+    using Service.Models.Product;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using AutoMapper.QueryableExtensions;
-    using CosmeticsShop.Service.Models.Product;
-    using Data;
-    using Data.Models;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Extensions.Internal;
-    using Service;
 
     public class ProductService : IProductService
     {
@@ -170,28 +169,15 @@
             return productDetails;
         }
 
+        public List<TModel> GetListProductWithDetails<TModel>(IEnumerable<Guid> itemsIds) where TModel : class
+            => this.db
+                  .Products
+                  .Where(pr => itemsIds.Contains(pr.Id))
+                  .ProjectTo<TModel>()
+                  .ToList();
 
-        //=> this.db
-        //    .Products
-        //    .Where(s => s.Id == id)
-        //    .Select(s => new ProductWithImagesServiceModel
-        //    {
-        //        Id = s.Id,
-        //        Name=s.Name,
-        //        Images = new Image
-        //        {
-        //            ImageUrl=s.Images.
-        //        }
 
-        //    })
-        //    .FirstOrDefault();
 
-        //public ProductDetailsServiceModel Details(int id)
-        //     => this.db
-        //        .Book
-        //        .Where(b => b.Id == id)
-        //        .ProjectTo<BookDetailsServiceModel>()
-        //        .FirstOrDefault();
 
     }
 }

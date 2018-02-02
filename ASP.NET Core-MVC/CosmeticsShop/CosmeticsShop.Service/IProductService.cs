@@ -55,6 +55,8 @@ namespace CosmeticsShop.Service
 
         ProductWithImagesServiceModel Details(Guid id);
 
+        List<TModel> GetListProductWithDetails<TModel>(IEnumerable<Guid> itemsIds) where TModel : class;
+
     }
 }
 
